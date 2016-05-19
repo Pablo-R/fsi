@@ -29,15 +29,15 @@ print
 x = tf.placeholder("float", [None, 4])
 y_ = tf.placeholder("float", [None, 3])
 
-neurons_in_hidden_layer = 4
+neurons_in_hidden_layer = 8
 
-WCapa = tf.Variable(np.float32(np.random.rand(4, neurons_in_hidden_layer)) * 0.1)
-bCapa = tf.Variable(np.float32(np.random.rand(neurons_in_hidden_layer)) * 0.1)
+weight_hidden_layer = tf.Variable(np.float32(np.random.rand(4, neurons_in_hidden_layer)) * 0.1)
+bias_hidden_layer = tf.Variable(np.float32(np.random.rand(neurons_in_hidden_layer)) * 0.1)
 
 weight = tf.Variable(np.float32(np.random.rand(neurons_in_hidden_layer, 3)) * 0.1)
 bias = tf.Variable(np.float32(np.random.rand(3)) * 0.1)
 
-layer_output = tf.sigmoid(tf.matmul(x, WCapa) + bCapa)
+layer_output = tf.sigmoid(tf.matmul(x, weight_hidden_layer) + bias_hidden_layer)
 y = tf.nn.softmax(tf.matmul(layer_output, weight) + bias)
 
 cross_entropy = tf.reduce_sum(tf.square(y_ - y))
