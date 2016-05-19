@@ -26,17 +26,21 @@ for i in range(20):
     print x_data[i], " -> ", y_data[i]
 print
 
-sample_input = tf.placeholder("float", [None, 4])
+x = tf.placeholder("float", [None, 4])
 y_ = tf.placeholder("float", [None, 3])
 
+neurons_in_hidden_layer = 4
 
-weight = tf.Variable(np.float32(np.random.rand(4, 3)) * 0.1)
+WCapa = tf.Variable(np.float32(np.random.rand(4, neurons_in_hidden_layer)) * 0.1)
+bCapa = tf.Variable(np.float32(np.random.rand(neurons_in_hidden_layer)) * 0.1)
+
+weight = tf.Variable(np.float32(np.random.rand(neurons_in_hidden_layer, 3)) * 0.1)
 bias = tf.Variable(np.float32(np.random.rand(3)) * 0.1)
 
-output = tf.nn.softmax((tf.sigmoid(tf.matmul(sample_input, weight) + bias)))
+layer_output = tf.sigmoid(tf.matmul(x, WCapa) + bCapa)
+y = tf.nn.softmax(tf.matmul(layer_output, weight) + bias)
 
-
-cross_entropy = tf.reduce_sum(tf.square(y_ - output))
+cross_entropy = tf.reduce_sum(tf.square(y_ - y))
 #cross_entropy = -tf.reduce_sum(y_*tf.log(y))
 
 train = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
@@ -57,10 +61,10 @@ for step in xrange(1000):
         batch_xs = x_data[jj*batch_size : jj*batch_size+batch_size]
         batch_ys = y_data[jj*batch_size : jj*batch_size+batch_size]
 
-        sess.run(train, feed_dict={sample_input: batch_xs, y_: batch_ys})
+        sess.run(train, feed_dict={x: batch_xs, y_: batch_ys})
         if step % 50 == 0:
-            print "Iteration #:", step, "Error: ", sess.run(cross_entropy, feed_dict={sample_input: batch_xs, y_: batch_ys})
-            result = sess.run(output, feed_dict={sample_input: batch_xs})
+            print "Iteration #:", step, "Error: ", sess.run(cross_entropy, feed_dict={x: batch_xs, y_: batch_ys})
+            result = sess.run(y, feed_dict={x: batch_xs})
             for bias, r in zip(batch_ys, result):
                 print bias, "-->", r
             print "----------------------------------------------------------------------------------"
