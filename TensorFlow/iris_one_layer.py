@@ -71,4 +71,5 @@ for step in xrange(1000):
             for bias, r in zip(batch_ys, result):
                 print bias, "-->", r
             print "----------------------------------------------------------------------------------"
-print list_of_errors
+plt.plot(list_of_errors)
+plt.show()
