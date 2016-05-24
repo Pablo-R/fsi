@@ -29,7 +29,7 @@ print
 x = tf.placeholder("float", [None, 4])
 y_ = tf.placeholder("float", [None, 3])
 
-neurons_in_hidden_layer = 8
+neurons_in_hidden_layer = 5
 
 weight_hidden_layer = tf.Variable(np.float32(np.random.rand(4, neurons_in_hidden_layer)) * 0.1)
 bias_hidden_layer = tf.Variable(np.float32(np.random.rand(neurons_in_hidden_layer)) * 0.1)
@@ -55,6 +55,7 @@ print "   Start training...  "
 print "----------------------"
 
 batch_size = 20
+list_of_errors = []
 
 for step in xrange(1000):
     for jj in xrange(len(x_data) / batch_size):
@@ -63,14 +64,11 @@ for step in xrange(1000):
 
         sess.run(train, feed_dict={x: batch_xs, y_: batch_ys})
         if step % 50 == 0:
-            print "Iteration #:", step, "Error: ", sess.run(cross_entropy, feed_dict={x: batch_xs, y_: batch_ys})
+            error = sess.run(cross_entropy, feed_dict={x: batch_xs, y_: batch_ys})
+            print "Iteration #:", step, "Error: ", error
+            list_of_errors.append(error)
             result = sess.run(y, feed_dict={x: batch_xs})
             for bias, r in zip(batch_ys, result):
                 print bias, "-->", r
             print "----------------------------------------------------------------------------------"
-            
-            
-            
-            
-            
-            
+print list_of_errors
